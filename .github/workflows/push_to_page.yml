@@ -5,7 +5,8 @@ on:
 jobs:
   build-and-test:
     uses: ./.github/workflows/build_and_test.yml
-    with: upload-pages-artifact: true
+    with:
+      upload-pages-artifact: true
   push-to-page:
     runs-on: ubuntu-latest
     needs: build-and-test
