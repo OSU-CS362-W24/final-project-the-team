@@ -24,3 +24,12 @@
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 require("@testing-library/cypress/add-commands")
+
+Cypress.Commands.add('addXY', function(row, x_value, y_value) {
+    if (row != 0) {
+        cy.get("#add-values-btn").click()
+    }
+    cy.get(".x-value-input").eq(row).type(x_value)
+    cy.get(".y-value-input").eq(row).type(y_value)
+
+})
