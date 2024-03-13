@@ -1,6 +1,6 @@
 name: Build and Test
 on:
-  workflow-call:
+  workflow_call:
     inputs:
       upload-pages-artifact:
         type: boolean
