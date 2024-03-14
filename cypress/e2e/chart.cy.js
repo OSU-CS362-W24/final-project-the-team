@@ -94,6 +94,9 @@ it("Re-opening a saved chart", function() {
 
   // Asssert
 
+  // Verify that image is displayed
+  cy.get("#chart-img").should("exist")
+
   // Verify that values were maintained on different page (scatter page)
   cy.get("#chart-title-input").should('have.value', 'Cats vs. Dogs')
   cy.get("#chart-color-input").should("have.value", "#0000ff")
