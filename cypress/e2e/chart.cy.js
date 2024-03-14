@@ -73,3 +73,37 @@ it("Saving a chart to the 'gallery'", function() {
   // Assert: Check if Title of chart exists within DOM 
   cy.findByText("Cats vs. Dogs").should("exist")
 })
+
+
+it("Re-opening a saved chart", function() {
+  // Visit homepage and click Line link
+  cy.visit("/")
+  cy.findByRole("link", { name: "Line"}).click()
+
+  // Fill Inputs Command to fill input fields
+  cy.fillInputs()
+
+  // Generate Chart and then Click Save Chart Button 
+  cy.get("#generate-chart-btn").click()
+  cy.get("#save-chart-btn").click()
+
+  // Click Gallery Link to check if generated chart is present
+  cy.findByRole("link", { name: "Gallery"}).click()
+  // Click on Chart Image Link that is in the Gallery
+  cy.get(".chart-img").click()
+
+  // Asssert
+
+  // Verify that values were maintained on different page (scatter page)
+  cy.get("#chart-title-input").should('have.value', 'Cats vs. Dogs')
+  cy.get("#chart-color-input").should("have.value", "#0000ff")
+  cy.get("#x-label-input").should("have.value", "Cats")
+  cy.get("#y-label-input").should("have.value", "Dogs")
+
+  // Verify that XY coordinates input fields exist
+  for (let i = 0; i < 5; i++) {
+    cy.get(".x-value-input").eq(i).should("exist")
+    cy.get(".y-value-input").eq(i).should("exist")
+  }
+  
+})
