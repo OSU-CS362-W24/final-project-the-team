@@ -290,6 +290,7 @@ test("Clearing the data button resets color picker", async function() {
 
 })
 
+//Correct values are sent to generate graph function
 test("Sending correct values to generate graph function", async function() {
 	// Arrange:
 	initDomFromFIles(`${__dirname}/line/line.html`, `${__dirname}/line/line.js`)
