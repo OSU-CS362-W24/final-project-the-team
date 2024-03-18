@@ -5,11 +5,7 @@
   "scripts": {
     "build": "webpack",
     "start": "webpack serve --open",
-    "test:integration": "jest --passWithNoTests",
-    "test:e2e": "start-test start http://localhost:8080 cy:run",
-    "test": "npm-run-all test:*",
-    "cy:run": "cypress run",
-    "cy:open": "cypress open"
+    "test": "jest"
   },
   "devDependencies": {
     "css-loader": "^6.7.4",
@@ -25,8 +21,11 @@
     }
   },
   "dependencies": {
-    "cypress": "^13.7.0",
+    "@testing-library/dom": "^9.3.4",
+    "@testing-library/jest-dom": "^6.4.2",
+    "@testing-library/user-event": "^14.5.2",
+    "all": "^0.0.0",
     "jest": "^29.7.0",
-    "start-server-and-test": "^2.0.3"
+    "jest-environment-jsdom": "^29.7.0"
   }
 }
