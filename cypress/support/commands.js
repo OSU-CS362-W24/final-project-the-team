@@ -23,6 +23,7 @@
 //
 // -- This will overwrite an existing command --
 <<<<<<< HEAD
+<<<<<<< HEAD
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 require("@testing-library/cypress/add-commands")
 
@@ -55,6 +56,9 @@ Cypress.Commands.add('fillInputs', function() {
     cy.addXY(3, 4, 25)
     cy.addXY(4, 5, 40)
 })
+=======
+// Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
+>>>>>>> e5422d895746a5b19b3a46081a86fd7e48f588fe
 =======
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 >>>>>>> e5422d895746a5b19b3a46081a86fd7e48f588fe
