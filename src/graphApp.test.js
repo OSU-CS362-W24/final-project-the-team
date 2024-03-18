@@ -23,6 +23,7 @@ function initDomFromFIles(htmlPath, jsPath){
 
 beforeEach(() => {
  
+    //Make sure any saved input data is cleared after every refresh.
     currentChartData = {}
     InputStorage.updateCurrentChartData(currentChartData)
 
@@ -62,10 +63,11 @@ test("Clicking the + button adds an X and Y input correctly", async function() {
 })
 
 //Alerts displayed for missing chart data tests
-test("Genereating a graph without any values", async function() {
+test("Genereating a graph without any values, Error: No data specified!", async function() {
 	// Arrange:
 	initDomFromFIles(`${__dirname}/line/line.html`, `${__dirname}/line/line.js`)
     window.alert = jest.fn()
+
 	// Acquire the + button
 	const GeneratechartBtn = domTesting.getByText(document, "Generate chart")
 
@@ -77,21 +79,23 @@ test("Genereating a graph without any values", async function() {
     
 	// Act:
 	const user = userEvent.setup()
-    
+
+    //Generate chart
 	await user.click(GeneratechartBtn)
 
 	// Assert:
-    expect(spy).toHaveBeenCalledTimes(1);
 
+    //Make sure alert was called once with proper error message    
+    expect(spy).toHaveBeenCalledTimes(1);
     const alertMessage = alert.mock.lastCall[0]
     expect(alertMessage).toEqual(errorMessage)
 
-    
+    //Restore the spy
     spy.mockRestore()
 
 })
 
-test("Genereating a graph without X/Y axis titles", async function() {
+test("Genereating a graph without X/Y axis titles, Error: Must specify a label for both X and Y!", async function() {
 	// Arrange:
 	initDomFromFIles(`${__dirname}/line/line.html`, `${__dirname}/line/line.js`)
     window.alert = jest.fn()
@@ -105,26 +109,32 @@ test("Genereating a graph without X/Y axis titles", async function() {
     //Alert message
     const errorMessage = "Error: Must specify a label for both X and Y!"
     
+    //Create spy
     const spy = jest.spyOn(window, 'alert').mockImplementation(() => {});
     
 	// Act:
 	const user = userEvent.setup()
-    
+
+    //Add values to inputs fields
     await user.type(X_Val[0], "1")
     await user.type(Y_Val[0], "2")
+
+    //Generate chart
 	await user.click(GeneratechartBtn)
 
 	// Assert:
+
+    //Make sure alert was called once with proper error message   
     expect(spy).toHaveBeenCalledTimes(1);
     const alertMessage = alert.mock.lastCall[0]
     expect(alertMessage).toEqual(errorMessage)
 
-    
+    //Restore the spy
     spy.mockRestore()
 
 })
 
-test("Genereating a graph without X/Y points", async function() {
+test("Genereating a graph without X/Y points, Error: No data specified!", async function() {
 	// Arrange:
 	initDomFromFIles(`${__dirname}/line/line.html`, `${__dirname}/line/line.js`)
     window.alert = jest.fn()
@@ -138,6 +148,7 @@ test("Genereating a graph without X/Y points", async function() {
     //Alert message
     const errorMessage = "Error: No data specified!"
     
+    //Create spy
     const spy = jest.spyOn(window, 'alert').mockImplementation(() => {});
     
 	// Act:
@@ -148,11 +159,13 @@ test("Genereating a graph without X/Y points", async function() {
 	await user.click(GeneratechartBtn)
 
 	// Assert:
+
+    //Make sure alert was called once with proper error message   
     expect(spy).toHaveBeenCalledTimes(1);
     const alertMessage = alert.mock.lastCall[0]
     expect(alertMessage).toEqual(errorMessage)
 
-    
+    //Restore the spy
     spy.mockRestore()
 
 })
@@ -176,6 +189,8 @@ test("Clearing the data button resets Chart title", async function() {
 	await user.click(Clear_chart_data_btn)
 
 	// Assert:
+
+    //Checks Chart Title is empty
     expect(Chart_title_input).toHaveValue("")
 
 })
@@ -199,6 +214,8 @@ test("Clearing the data button resets X/Y axis titles", async function() {
 	await user.click(Clear_chart_data_btn)
 
 	// Assert:
+
+    //Checks that X/Y Axis title are empty
     expect(X_Axis_title).toHaveValue("")
     expect(Y_Axis_title).toHaveValue("")
 
@@ -212,7 +229,6 @@ test("Clearing the data button resets X/Y point values", async function() {
     const Clear_chart_data_btn = domTesting.getByRole(document, "button", {name : "Clear chart data"})
     const add_Point_btn = domTesting.getByRole(document, "button", {name : "+"})
 
-
     //Acquire Chart title
 
 	// Act:
@@ -221,9 +237,11 @@ test("Clearing the data button resets X/Y point values", async function() {
     await user.click(add_Point_btn)
     await user.click(add_Point_btn)
 
+    //Get X/Y point values
     const X_points = domTesting.queryAllByLabelText(document, "X")
     const Y_points = domTesting.queryAllByLabelText(document, "Y")
 
+    //Add X/Y point values
     await user.type(X_points[0], "1")
     await user.type(Y_points[0], "2")
     await user.type(X_points[1], "3")
@@ -231,15 +249,19 @@ test("Clearing the data button resets X/Y point values", async function() {
     await user.type(X_points[2], "5")
     await user.type(Y_points[2], "6")
 
+    //Clear chart data
 	await user.click(Clear_chart_data_btn)
 
 	// Assert:
+    //Get X/Y point values
     const newX_points = domTesting.queryAllByLabelText(document, "X")
     const newY_points = domTesting.queryAllByLabelText(document, "Y")
 
+    //Checks that X/Y point inputs should only have 1 of each
     expect(newX_points).toHaveLength(1)
     expect(newY_points).toHaveLength(1)
     
+    //Checks for no values in X/Y inputs
     expect(newX_points[0]).not.toHaveValue()
     expect(newY_points[0]).not.toHaveValue()
 
@@ -271,8 +293,9 @@ test("Clearing the data button resets color picker", async function() {
 test("Sending correct values to generate graph function", async function() {
 	// Arrange:
 	initDomFromFIles(`${__dirname}/line/line.html`, `${__dirname}/line/line.js`)
-
     const generateChartImg = require("./lib/generateChartImg.js")
+
+    //Set up mock
     jest.mock('./lib/generateChartImg.js');
     generateChartImg.mockImplementation((type, data, xLabel, yLabel, title, color) => {})
     
@@ -281,26 +304,31 @@ test("Sending correct values to generate graph function", async function() {
     const generateChartButton = domTesting.getByRole(document, "button", {name : "Generate chart"})
     const add_Point_btn = domTesting.getByRole(document, "button", {name : "+"})
     const Chart_title_input = domTesting.getByLabelText(document, "Chart title")
-
     const X_Axis_title = domTesting.getByLabelText(document, "X label")
     const Y_Axis_title = domTesting.getByLabelText(document, "Y label")
 
-    // Create more points
-	const user = userEvent.setup()
+    //Setup user
+    const user = userEvent.setup()
+
+    //User clicks + to add more points 
 	await user.click(add_Point_btn)
     await user.click(add_Point_btn)
 
-    //Get points inputs
+    //Get X/Y point inputs
     const X_points = domTesting.queryAllByLabelText(document, "X")
     const Y_points = domTesting.queryAllByLabelText(document, "Y")
 
     //Create fake inputs
+
+    //Add color
     domTesting.fireEvent.input(Chart_color_btn, {target: {value: '#00ff4C'}})
 
+    //Add titles
     await user.type(Chart_title_input, "Test title")
     await user.type(X_Axis_title, "X axis title")
     await user.type(Y_Axis_title, "Y axis title")
 
+    //Add X/Y point values
     await user.type(X_points[0], "1")
     await user.type(Y_points[0], "2")
     await user.type(X_points[1], "3")
@@ -308,18 +336,21 @@ test("Sending correct values to generate graph function", async function() {
     await user.type(X_points[2], "5")
     await user.type(Y_points[2], "6")
 
+    //Generate chart
     await user.click(generateChartButton)
 
     //Make generate chart went through
     expect(generateChartImg).toHaveBeenCalledTimes(1)
+
+    //Make sure that generate chart was sent correct values
     expect(generateChartImg).toHaveBeenCalledWith
     (
         "line",
-         [{"x": "1", "y": "2"},{"x": "3", "y": "4"},{"x": "5", "y": "6"}], 
-          "X axis title",
-          "Y axis title",
-          "Test title",
-          "#00ff4c"
+        [{"x": "1", "y": "2"},{"x": "3", "y": "4"},{"x": "5", "y": "6"}], 
+        "X axis title",
+        "Y axis title",
+        "Test title",
+        "#00ff4c"
     )
 
 })
