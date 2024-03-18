@@ -27,18 +27,6 @@ test('works correctly with single point', () => {
     expect(points).toEqual([{ }]);
   });
 
-
-  test('works correctly with an empty array', () => {
-    // Define input data (single point)
-    const points = [{ }];
-
-    // Call the sortPoints function
-    sortPoints(points);
-
-    // Check if the points array remains unchanged
-    expect(points).toEqual([{ }]);
-  });
-
   describe('sortPoints function', () => {
     test('throws error if not given an array', () => {
       // Define input data (not an array)
